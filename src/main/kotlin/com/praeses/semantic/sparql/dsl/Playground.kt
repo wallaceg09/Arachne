@@ -1,5 +1,7 @@
 package com.praeses.semantic.sparql.dsl
 
+import org.apache.jena.query.Query
+import org.apache.jena.rdf.model.ResourceFactory
 import org.apache.jena.sparql.core.Var
 
 /**
@@ -15,13 +17,18 @@ fun main(args: Array<String>) {
             .select(a).distinct()
             .where {
                 pattern(a, b, c)
+                filter(!((a not_equal_to  b) and (b not_equal_to c)) or (a equal_to c))
+                filter(a not_equal_to "Hello World")
+                filter(a not_equal_to ResourceFactory.createResource("http://www.test.com#hello_world.txt").asNode())
+                filter(a not_equal_to b)
+                filter(1 equal_to b)
+                filter(4 + 6 + (a not_equal_to b) + 3)
             }
             .limit(10).offset(5)
             .orderBy {
                 variable("a")
-            }
-            .groupBy {
                 variable(b)
+                variable(c, Query.ORDER_DESCENDING)
             }
             .build()
 
