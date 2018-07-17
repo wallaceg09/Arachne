@@ -12,6 +12,8 @@ class Select(vararg vars: Var) {
 
     private val whereClause: Where = Where()
 
+    private val orderByBuilder: OrderByBuilder = OrderByBuilder()
+
     private var distinct: Boolean = false
 
     private var reduced: Boolean = false
@@ -26,7 +28,8 @@ class Select(vararg vars: Var) {
         return this
     }
 
-    fun orderBy(): Select {
+    fun orderBy(dsl: OrderByBuilder.() -> Unit): Select {
+        orderByBuilder.dsl()
         return this
     }
 
@@ -68,6 +71,7 @@ class Select(vararg vars: Var) {
         buildReduced(query)
 
         whereClause.build(query)
+        orderByBuilder.build(query)
 
         return query
     }
@@ -117,6 +121,9 @@ fun main(args: Array<String>) {
                 pattern(a, b, c)
             }
             .limit(10).offset(5)
+            .orderBy {
+                variable(a)
+            }
             .build()
 
     println(query)
