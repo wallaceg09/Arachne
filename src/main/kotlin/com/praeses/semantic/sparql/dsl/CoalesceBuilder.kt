@@ -11,12 +11,8 @@ import org.apache.jena.sparql.expr.nodevalue.NodeValueNode
 /**
  * Created by Glen on 9/9/2017.
  */
-class CoalesceBuilder {
+class CoalesceBuilder internal constructor(lambda: CoalesceBuilder.() -> Unit) {
     private val expressions: MutableList<Expr> = mutableListOf()
-
-    internal constructor(lambda: CoalesceBuilder.() -> Unit) {
-        lambda.invoke(this)
-    }
 
     fun add(expr: Expr) {
         expressions.add(expr)
@@ -35,4 +31,8 @@ class CoalesceBuilder {
     }
 
     fun build() = E_Coalesce(ExprList(expressions))
+
+    init {
+        lambda.invoke(this)
+    }
 }
