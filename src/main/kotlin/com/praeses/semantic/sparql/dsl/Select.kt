@@ -110,21 +110,3 @@ class Select(vararg vars: Var) {
         }
     }
 }
-
-fun main(args: Array<String>) {
-    val a = Var.alloc("a")
-    val b = Var.alloc("b")
-    val c = Var.alloc("c")
-
-    val query = Select(a).distinct()
-            .where {
-                pattern(a, b, c)
-            }
-            .limit(10).offset(5)
-            .orderBy {
-                variable(a)
-            }
-            .build()
-
-    println(query)
-}
