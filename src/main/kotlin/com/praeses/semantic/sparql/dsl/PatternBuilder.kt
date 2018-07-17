@@ -5,9 +5,11 @@ import org.apache.jena.graph.Triple
 import org.apache.jena.rdf.model.Literal
 import org.apache.jena.rdf.model.RDFNode
 import org.apache.jena.rdf.model.ResourceFactory
+import org.apache.jena.sparql.core.Var
 import org.apache.jena.sparql.expr.*
 import org.apache.jena.sparql.expr.nodevalue.NodeValueNode
 import org.apache.jena.sparql.syntax.Element
+import org.apache.jena.sparql.syntax.ElementBind
 import org.apache.jena.sparql.syntax.ElementFilter
 import org.apache.jena.sparql.syntax.ElementTriplesBlock
 
@@ -332,7 +334,20 @@ abstract class PatternBuilder : QueryPartBuilder {
     fun bound(rdfNode: RDFNode) = bound(rdfNode.asNode())
     fun bound(any: Any) = bound(createTypedLiteral(any))
 
-    // TODO: Coalesce builder
+    fun bind(expr: Expr, `as`: Var) {
+        elements.add(ElementBind(`as`, expr))
+    }
+    fun bind(node: Node, `as`: Var) {
+        bind(NodeValueNode(node), `as`)
+    }
+    fun bind(rdfNode: RDFNode, `as`: Var) {
+        bind(rdfNode.asNode(), `as`)
+    }
+    fun bind(any: Any, `as`: Var) {
+        bind(createTypedLiteral(any), `as`)
+    }
+
+    fun coalesce(lambda: CoalesceBuilder.() -> Unit) = CoalesceBuilder(lambda).build()
 
     // TODO: See if this needs to be expanded?
     fun conditional(condition: Expr, thenExpr: Expr, elseExpr: Expr) = E_Conditional(condition, thenExpr, elseExpr)

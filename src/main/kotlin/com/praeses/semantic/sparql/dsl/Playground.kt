@@ -26,6 +26,7 @@ fun main(args: Array<String>) {
                 optional {
                     filter(b greater_than c)
                 }
+                bind(coalesce {add(b); add(c)}, a)
             }
             .limit(10).offset(5)
             .orderBy {
