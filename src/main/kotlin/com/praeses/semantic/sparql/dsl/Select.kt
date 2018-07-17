@@ -10,6 +10,8 @@ import org.apache.jena.sparql.core.Var
 class Select(dsl: Select.() -> Unit) {
     private val resultVars: MutableList<Var>
 
+    private val whereClause: Where = Where()
+
     constructor(vararg vars: Var, dsl: Select.() -> Unit) : this(dsl) {
         this.resultVars.addAll(vars)
     }
@@ -25,11 +27,15 @@ class Select(dsl: Select.() -> Unit) {
 
         buildSelectClause(query)
 
+        whereClause.build(query)
+
         return query
     }
 
-    fun where() {
+    fun where(dsl: Where.() -> Unit) : Select {
+        whereClause.dsl()
 
+        return this
     }
 
     fun orderBy() {
@@ -69,9 +75,13 @@ class Select(dsl: Select.() -> Unit) {
 
 fun main(args: Array<String>) {
     val a = Var.alloc("a")
+    val b = Var.alloc("b")
+    val c = Var.alloc("c")
 
     val query = Select(a) {
-
+        where {
+            pattern(a, b, c)
+        }
     }.build()
 
     println(query)
