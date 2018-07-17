@@ -23,6 +23,9 @@ fun main(args: Array<String>) {
                 filter(a not_equal_to b)
                 filter(1 equal_to b)
                 filter(4 + 6 + (a not_equal_to b) + 3)
+                optional {
+                    filter(b greater_than c)
+                }
             }
             .limit(10).offset(5)
             .orderBy {

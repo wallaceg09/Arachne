@@ -24,6 +24,12 @@ abstract class PatternBuilder : QueryPartBuilder {
         elements.add(triplesBlock)
     }
 
+    fun optional(dsl: OptionalBuilder.() -> Unit) {
+        val optional = OptionalBuilder()
+        optional.dsl()
+        elements.add(optional.getElement())
+    }
+
     fun filter(expr: Expr) {
         elements.add(ElementFilter(expr))
     }
@@ -327,7 +333,6 @@ abstract class PatternBuilder : QueryPartBuilder {
     fun bound(any: Any) = bound(createTypedLiteral(any))
 
     // TODO: Coalesce builder
-
 
     // TODO: See if this needs to be expanded?
     fun conditional(condition: Expr, thenExpr: Expr, elseExpr: Expr) = E_Conditional(condition, thenExpr, elseExpr)
