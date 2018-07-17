@@ -19,6 +19,9 @@ class OrderByBuilder {
     fun variable(variable: Var, direction: Int = Query.ORDER_DEFAULT) {
         node(variable, direction)
     }
+    fun variable(variableString: String, direction: Int = Query.ORDER_DEFAULT) {
+        node(Var.alloc(variableString), direction)
+    }
 
     fun node(node: Node, direction: Int = Query.ORDER_DEFAULT) {
         conditions.add(SortCondition(node, direction))

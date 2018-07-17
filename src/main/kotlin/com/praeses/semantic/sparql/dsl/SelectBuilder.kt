@@ -22,6 +22,10 @@ class SelectBuilder(vararg vars: Var) {
 
     private var offset: Long = 0
 
+    init {
+        resultVars.addAll(vars)
+    }
+
     fun where(dsl: WhereBuilder.() -> Unit): SelectBuilder {
         whereBuilder.dsl()
 

@@ -18,7 +18,7 @@ fun main(args: Array<String>) {
             }
             .limit(10).offset(5)
             .orderBy {
-                variable(a)
+                variable("a")
             }
             .build()
 
