@@ -50,7 +50,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for more information.
 
 ## License
 
-Arachne is released under the [Apache 2.0 license](LICENSE.txt).
+Arachne is released under the [Apache 2.0 license](LICENSE).
 
 This software is provided on an "AS IS" basis without warranty. Please see
 section 7 of the License for more information.
