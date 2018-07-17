@@ -9,8 +9,10 @@ fun main(args: Array<String>) {
     val a = Var.alloc("a")
     val b = Var.alloc("b")
     val c = Var.alloc("c")
+    val queryBuilder = QueryBuilder()
 
-    val query = SelectBuilder(a).distinct()
+    val query = queryBuilder
+            .select(a).distinct()
             .where {
                 pattern(a, b, c)
             }
