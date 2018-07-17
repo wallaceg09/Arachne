@@ -10,7 +10,7 @@ import org.apache.jena.sparql.core.Var
 class SelectBuilder(vararg vars: Var) {
     private val resultVars: MutableList<Var> = mutableListOf()
 
-    private val whereClause: Where = Where()
+    private val whereBuilder: WhereBuilder = WhereBuilder()
 
     private val orderByBuilder: OrderByBuilder = OrderByBuilder()
 
@@ -22,8 +22,8 @@ class SelectBuilder(vararg vars: Var) {
 
     private var offset: Long = 0
 
-    fun where(dsl: Where.() -> Unit): SelectBuilder {
-        whereClause.dsl()
+    fun where(dsl: WhereBuilder.() -> Unit): SelectBuilder {
+        whereBuilder.dsl()
 
         return this
     }
@@ -70,7 +70,7 @@ class SelectBuilder(vararg vars: Var) {
         buildDistinct(query)
         buildReduced(query)
 
-        whereClause.build(query)
+        whereBuilder.build(query)
         orderByBuilder.build(query)
 
         return query
