@@ -12,18 +12,15 @@ class Select(vararg vars: Var) {
 
     private val whereClause: Where = Where()
 
-    internal fun build() : Query {
-        val query = Query()
-        query.setQuerySelectType()
+    private var distinct: Boolean = false
 
-        buildSelectClause(query)
+    private var reduced: Boolean = false
 
-        whereClause.build(query)
+    private var limit: Long = Query.NOLIMIT
 
-        return query
-    }
+    private var offset: Long = 0
 
-    fun where(dsl: Where.() -> Unit) : Select {
+    fun where(dsl: Where.() -> Unit): Select {
         whereClause.dsl()
 
         return this
@@ -37,29 +34,75 @@ class Select(vararg vars: Var) {
         return this
     }
 
-    fun limit(): Select {
+    fun limit(value: Long): Select {
+        this.limit = value
         return this
     }
 
-    fun offset(): Select {
+    fun offset(value: Long): Select {
+        this.offset = value
         return this
     }
 
     fun distinct(): Select {
+        this.distinct = true
+        this.reduced = false
+
         return this
     }
 
     fun reduced(): Select {
+        this.reduced = true
+        this.distinct = false
         return this
     }
 
+    internal fun build(): Query {
+        val query = Query()
+        query.setQuerySelectType()
+
+        buildSelectClause(query)
+        buildLimit(query)
+        buildOffset(query)
+        buildDistinct(query)
+        buildReduced(query)
+
+        whereClause.build(query)
+
+        return query
+    }
+
     private fun buildSelectClause(query: Query) {
-        if(resultVars.size > 0) {
+        if (resultVars.size > 0) {
             resultVars.forEach {
                 query.addResultVar(it)
             }
         } else {
             query.isQueryResultStar = true
+        }
+    }
+
+    private fun buildLimit(query: Query) {
+        if (limit > 0) {
+            query.limit = limit
+        }
+    }
+
+    private fun buildOffset(query: Query) {
+        if (offset > 0) {
+            query.offset = offset
+        }
+    }
+
+    private fun buildDistinct(query: Query) {
+        if (distinct) {
+            query.isDistinct = true
+        }
+    }
+
+    private fun buildReduced(query: Query) {
+        if (reduced) {
+            query.isReduced = true
         }
     }
 }
@@ -69,12 +112,11 @@ fun main(args: Array<String>) {
     val b = Var.alloc("b")
     val c = Var.alloc("c")
 
-    val query =
-            Select(a)
+    val query = Select(a).distinct()
             .where {
                 pattern(a, b, c)
             }
-            .distinct()
+            .limit(10).offset(5)
             .build()
 
     println(query)
