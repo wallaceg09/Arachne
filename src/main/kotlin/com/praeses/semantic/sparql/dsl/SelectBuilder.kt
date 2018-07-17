@@ -7,7 +7,7 @@ import org.apache.jena.sparql.core.Var
  * Entrypoint for building a Select query.
  */
 // TODO: Document...
-class Select(vararg vars: Var) {
+class SelectBuilder(vararg vars: Var) {
     private val resultVars: MutableList<Var> = mutableListOf()
 
     private val whereClause: Where = Where()
@@ -22,39 +22,39 @@ class Select(vararg vars: Var) {
 
     private var offset: Long = 0
 
-    fun where(dsl: Where.() -> Unit): Select {
+    fun where(dsl: Where.() -> Unit): SelectBuilder {
         whereClause.dsl()
 
         return this
     }
 
-    fun orderBy(dsl: OrderByBuilder.() -> Unit): Select {
+    fun orderBy(dsl: OrderByBuilder.() -> Unit): SelectBuilder {
         orderByBuilder.dsl()
         return this
     }
 
-    fun groupBy(): Select {
+    fun groupBy(): SelectBuilder {
         return this
     }
 
-    fun limit(value: Long): Select {
+    fun limit(value: Long): SelectBuilder {
         this.limit = value
         return this
     }
 
-    fun offset(value: Long): Select {
+    fun offset(value: Long): SelectBuilder {
         this.offset = value
         return this
     }
 
-    fun distinct(): Select {
+    fun distinct(): SelectBuilder {
         this.distinct = true
         this.reduced = false
 
         return this
     }
 
-    fun reduced(): Select {
+    fun reduced(): SelectBuilder {
         this.reduced = true
         this.distinct = false
         return this

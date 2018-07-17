@@ -10,7 +10,7 @@ fun main(args: Array<String>) {
     val b = Var.alloc("b")
     val c = Var.alloc("c")
 
-    val query = Select(a).distinct()
+    val query = SelectBuilder(a).distinct()
             .where {
                 pattern(a, b, c)
             }
