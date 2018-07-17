@@ -10,7 +10,7 @@ import org.apache.jena.sparql.syntax.ElementTriplesBlock
 /**
  * Where clause builder.
  */
-class WhereBuilder {
+class WhereBuilder : QueryPartBuilder {
     private val elements: MutableList<Element> = mutableListOf()
 
     fun pattern(subject: Node, predicate: Node, obj: Node) {
@@ -20,7 +20,7 @@ class WhereBuilder {
         elements.add(triplesBlock)
     }
 
-    internal fun build(query: Query) {
+    override fun build(query: Query) {
         val mainElementGroup = ElementGroup()
         query.queryPattern = mainElementGroup
 

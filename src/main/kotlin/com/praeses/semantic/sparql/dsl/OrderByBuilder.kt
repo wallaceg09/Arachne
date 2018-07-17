@@ -9,7 +9,7 @@ import org.apache.jena.sparql.expr.Expr
 /**
  * Created by Glen on 8/31/2017.
  */
-class OrderByBuilder {
+class OrderByBuilder : QueryPartBuilder {
     private val conditions: MutableList<SortCondition> = mutableListOf()
 
     fun expression(expr: Expr, direction: Int = Query.ORDER_DEFAULT) {
@@ -31,7 +31,7 @@ class OrderByBuilder {
         conditions.add(condition)
     }
 
-    fun build(query: Query) {
+    override fun build(query: Query) {
         conditions.forEach { query.addOrderBy(it) }
     }
 }

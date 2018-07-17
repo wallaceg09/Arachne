@@ -14,6 +14,8 @@ class SelectBuilder(vararg vars: Var) {
 
     private val orderByBuilder: OrderByBuilder = OrderByBuilder()
 
+    private val groupByBuilder: GroupByBuilder = GroupByBuilder()
+
     private var distinct: Boolean = false
 
     private var reduced: Boolean = false
@@ -37,7 +39,8 @@ class SelectBuilder(vararg vars: Var) {
         return this
     }
 
-    fun groupBy(): SelectBuilder {
+    fun groupBy(dsl: GroupByBuilder.() -> Unit): SelectBuilder {
+        groupByBuilder.dsl()
         return this
     }
 
@@ -76,6 +79,7 @@ class SelectBuilder(vararg vars: Var) {
 
         whereBuilder.build(query)
         orderByBuilder.build(query)
+        groupByBuilder.build(query)
 
         return query
     }

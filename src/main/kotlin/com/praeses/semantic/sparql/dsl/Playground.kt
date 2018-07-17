@@ -20,6 +20,9 @@ fun main(args: Array<String>) {
             .orderBy {
                 variable("a")
             }
+            .groupBy {
+                variable(b)
+            }
             .build()
 
     println(query)
