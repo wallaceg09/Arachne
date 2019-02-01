@@ -3,7 +3,10 @@ package com.praeses.semantic.sparql.dsl
 import org.apache.jena.graph.Triple
 import org.apache.jena.query.Query
 import org.apache.jena.rdf.model.ResourceFactory
+import org.apache.jena.shared.PrefixMapping
 import org.apache.jena.sparql.core.Var
+import org.apache.jena.sparql.path.PathFactory
+import org.apache.jena.sparql.path.PathParser
 import org.apache.jena.sparql.syntax.ElementTriplesBlock
 
 /**
@@ -21,13 +24,14 @@ fun main(args: Array<String>) {
     val query = queryBuilder
             .select(a).distinct()
             .where {
-                pattern(a, b, c)
-                filter(!((a not_equal_to b) and (b not_equal_to c)) or (a equal_to c))
-                filter(a not_equal_to "Hello World")
-                filter(a not_equal_to ResourceFactory.createResource("http://www.test.com#hello_world.txt").asNode())
-                filter(a not_equal_to b)
-                filter(1 equal_to b)
-                filter(4 + 6 + (a not_equal_to b) + 3)
+//                pattern(a, b, c)
+                pattern(a, PathParser.parse("rdfs:subclasOf+", PrefixMapping.Standard), c)
+//                filter(!((a not_equal_to b) and (b not_equal_to c)) or (a equal_to c))
+//                filter(a not_equal_to "Hello World")
+//                filter(a not_equal_to ResourceFactory.createResource("http://www.test.com#hello_world.txt").asNode())
+//                filter(a not_equal_to b)
+//                filter(1 equal_to b)
+//                filter(4 + 6 + (a not_equal_to b) + 3)
                 optional {
                     filter(b greater_than c)
                 }
