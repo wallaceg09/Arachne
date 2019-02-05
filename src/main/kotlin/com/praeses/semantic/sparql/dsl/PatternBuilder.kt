@@ -5,13 +5,12 @@ import org.apache.jena.graph.Triple
 import org.apache.jena.rdf.model.Literal
 import org.apache.jena.rdf.model.RDFNode
 import org.apache.jena.rdf.model.ResourceFactory
+import org.apache.jena.sparql.core.TriplePath
 import org.apache.jena.sparql.core.Var
 import org.apache.jena.sparql.expr.*
 import org.apache.jena.sparql.expr.nodevalue.NodeValueNode
-import org.apache.jena.sparql.syntax.Element
-import org.apache.jena.sparql.syntax.ElementBind
-import org.apache.jena.sparql.syntax.ElementFilter
-import org.apache.jena.sparql.syntax.ElementTriplesBlock
+import org.apache.jena.sparql.path.Path
+import org.apache.jena.sparql.syntax.*
 
 /**
  * Created by Glen on 9/3/2017.
@@ -20,10 +19,24 @@ abstract class PatternBuilder : QueryPartBuilder {
     protected val elements: MutableList<Element> = mutableListOf()
 
     fun pattern(subject: Node, predicate: Node, obj: Node) {
-        val triplesBlock = ElementTriplesBlock()
-        triplesBlock.addTriple(Triple(subject, predicate, obj))
+        pattern(Triple(subject, predicate, obj))
+    }
 
-        elements.add(triplesBlock)
+    fun pattern(subject: Node, path: Path, obj: Node) {
+        val triplePath = TriplePath(subject, path, obj)
+        val elementPath = ElementPathBlock().apply { addTriple(triplePath) }
+        pattern(elementPath)
+    }
+
+    fun pattern(triple: Triple) {
+        val triplesBlock = ElementTriplesBlock()
+        triplesBlock.addTriple(triple)
+
+        pattern(triplesBlock)
+    }
+
+    private fun pattern(element: Element) {
+        elements.add(element)
     }
 
     fun optional(dsl: OptionalBuilder.() -> Unit) {
